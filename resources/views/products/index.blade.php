@@ -1,42 +1,54 @@
-@extends('layouts.app') {{-- si usas layout --}}
+@extends('layouts.app')
+
 @section('content')
-    <h1>Lista de Productos</h1>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3">Lista de Productos</h1>
+        <a href="{{ route('products.create') }}" class="btn btn-primary">Agregar nuevo producto</a>
+    </div>
 
     @if(session('success'))
-        <div style="color: green;">{{ session('success') }}</div>
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
     @endif
 
-    <a href="{{ route('products.create') }}">Agregar nuevo producto</a>
-
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Categoría</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        @forelse($products as $product)
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-dark">
             <tr>
-                <td>{{ $product->nombre }}</td>
-                <td>{{ $product->descripcion }}</td>
-                <td>${{ $product->precio }}</td>
-                <td>{{ $product->category->nombre ?? 'Sin categoría' }}</td>
-                <td>
-                    <a href="{{ route('products.edit', $product->id) }}">Editar</a> |
-                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('¿Seguro que quieres eliminar este producto?')">Eliminar</button>
-                    </form>
-                </td>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Categoría</th>
+                <th>Acciones</th>
             </tr>
-        @empty
-            <tr><td colspan="5">No hay productos aún.</td></tr>
-        @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            @forelse($products as $product)
+                <tr>
+                    <td>{{ $product->nombre }}</td>
+                    <td>{{ $product->descripcion }}</td>
+                    <td>${{ number_format($product->precio, 2) }}</td>
+                    <td>{{ $product->category->nombre ?? 'Sin categoría' }}</td>
+                    <td>
+                        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-warning">Editar</a>
+
+                        <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('¿Seguro que quieres eliminar este producto?')">
+                                Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5" class="text-center">No hay productos aún.</td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
+    </div>
 @endsection

@@ -11,23 +11,29 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/products', [ProductController::class, 'index']);
+// Productos
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/crear', [ProductController::class, 'create'])->name('products.create');
+Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
+Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
+Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
-//Ruta para agregar usuarios desde el navegador
+// Usuarios
+Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
 Route::get('/usuarios/crear', [UserController::class, 'create'])->name('usuarios.create');
 Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
 
-//phones rutas para poder agregar desde el navegador
+// Teléfonos
+Route::get('/telefonos', [PhoneController::class, 'index'])->name('telefonos.index');
 Route::get('/telefonos/crear', [PhoneController::class, 'create'])->name('telefonos.create');
 Route::post('/telefonos', [PhoneController::class, 'store'])->name('telefonos.store');
 
-//rutas para agregar categorias desde el navegador
+// Categorías
+Route::get('/categorias', [CategoryController::class, 'index'])->name('categorias.index');
 Route::get('/categorias/crear', [CategoryController::class, 'create'])->name('categorias.create');
 Route::post('/categorias', [CategoryController::class, 'store'])->name('categorias.store');
 
-//rutas para poder agregar productos:
-Route::get('/products/crear', [ProductController::class, 'create'])->name('products.create');
-Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-
-//dashboard que mostrará la vista principal de todos los elementos.
+// Dashboard principal
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+

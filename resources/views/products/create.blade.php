@@ -1,46 +1,63 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Crear Producto</title>
-</head>
-<body>
-<h1>Crear Producto</h1>
+@extends('layouts.app')
 
-@if (session('success'))
-    <p style="color: green">{{ session('success') }}</p>
-@endif
+@section('title', 'Crear Producto')
 
-@if ($errors->any())
-    <div style="color: red">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+@section('content')
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Crear Producto</h5>
+        </div>
+        <div class="card-body">
+
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('products.store') }}">
+                @csrf
+
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" value="{{ old('nombre') }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea name="descripcion" class="form-control" rows="3">{{ old('descripcion') }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="precio" class="form-label">Precio</label>
+                    <input type="number" step="0.01" name="precio" class="form-control" value="{{ old('precio') }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="category_id" class="form-label">Categoría</label>
+                    <select name="category_id" class="form-select">
+                        <option value="">Seleccione una categoría</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->nombre }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{{ route('products.index') }}" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
+        </div>
     </div>
-@endif
-
-<form method="POST" action="{{ route('products.store') }}">
-    @csrf
-    <label>Nombre:</label><br>
-    <input type="text" name="nombre"><br><br>
-
-    <label>Descripción:</label><br>
-    <textarea name="descripcion"></textarea><br><br>
-
-    <label>Precio:</label><br>
-    <input type="text" name="precio"><br><br>
-
-    <label>Categoría:</label><br>
-    <select name="category_id">
-        <option value="">Seleccione una categoría</option>
-        @foreach ($categories as $category)
-            <option value="{{ $category->id }}">{{ $category->nombre }}</option>
-        @endforeach
-    </select><br><br>
-
-    <button type="submit">Guardar</button>
-</form>
-</body>
-</html>
-
+@endsection
